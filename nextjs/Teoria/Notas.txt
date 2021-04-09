@@ -1,0 +1,154 @@
+Lo primero es crear una carpeta donde guardaremos nuestro proyuecto
+
+Creamos un proyecto nuevo:
+	npx create-next-app nextjs-blog --use-npm --example "https://github.com/vercel/next-learn-starter/tree/master/learn-starter"
+
+Luego entramos en ese proyecto:
+	cd nextjs-blog
+
+Y ya podemos correr nuestro proyecto:
+	npm run dev
+
+-------------------------------------------------------------
+RUTAS ESTÁTICAS:
+NextJS tiene un router determinado por archivos
+si vemos la carpeta pages, los archivos dentro de esa carpeta 
+determian las rutas disponibles en nuestra app.
+
+vamos a crear un archivo "users.js":
+(Ver 1_routes)
+
+Luego vamos al navegador y accedemos a users
+(Ver 2_users)
+
+Como vemos, no neceistamos crear un router, ni importar componentes
+Nota: ten en cuenta que el nombre de la ruta corresponde al nombre del archivo
+
+--------------------------------------------------------------
+
+RUTAS DINÁMICAS:
+Vamos a reestructurar nuestras rutas, colocando dentro de la carpeta pages
+carpetas para cada ruta (Ver 3_pages)
+y cambiamos el nombre de los archivos a "index" (Ver 4_reestructura)
+
+
+Las páginas dinámicas sirven para no crear varios archivos del tipo
+http://localhost:3000/users/1
+http://localhost:3000/users/2
+http://localhost:3000/users/3
+
+users1.js
+users2.js
+users3.js
+
+Nooooo!
+
+Lo mejor es una forma dinámica:
+(Ver 5_rutaDinamica)
+de esa forma le indicamos que todo lo que venga tras de users/ se renderize el [user].js
+pero si le pongo http://localhost:3000/users/algo también se renderiza [user].js
+
+¿Cómo hago para obtener el valor que envío en la url para usarlo en mi componente?
+con un hook! UseRouter
+(Ver 6_useRouter)
+si te fijas en la propiedad query, el nombre de la propiedad corresponde al nombre del archivo entre corchetes [user] (realmente lo ideal sería que se llame [id]) y el valor "1"
+corresponde a lo que está en la url
+
+-----------------------------------------------------------------
+Links:
+Nos sirve para visitar las rutas de nuestra app (Paginación!)
+vamos a crear un navbar para colocar ahi los enlaces de link
+creamos una carpeta llamada components
+y dentro un archivo para el navbar.js
+
+luego lo importamos en el archivo raíz o donde queramos que aparezca navbar
+(No olvides hacer el import Navbar from "../../components/navbar";)
+
+Links para dinámicas:
+vamos al archivo navbar.js y lo hacemos como en la imagen (Ver 7_linksDimanico)
+
+------------------------------------------------------------------
+COMPONENTE DE LAYOUT:
+
+este componte es para que todas las páginas de nuestra app lo utilicen, esto viene de la mano con StyledJSX
+vamos a nuestra carpeta componetes, y creamos titles-js
+
+Luego vamos a un componente donde queramos que se presente ese título, digamos en el Home
+(Ver 9_titleHome)
+Si le vemos, en ambos casos me renderiza el "Un título F"
+
+Lo que tenemos que hacer es usar proprs en el title.js (Ver 10_props)
+
+
+creamos un layout.js en la carpeta components
+y retornamos una etiqueta "main", dentro de esta es donde vamos a renderizar cada una de los elementos de las páginas de nuestra app
+(Ver 11_layout)
+Entonces con ese layout ya no es necesario por ejemplo 
+en el index.js tener <Navbar/>
+sino incluir dentro de una etiqueta <Layout><Layout/>
+(Ver 12_loyout2)
+----------------------------------------------------------------------
+ESTILOS:
+en  Next css viene encapsulado, o sea SCOPED 
+quiere decir que lso estilos dados a un componente solo afectan a ese componetne y sus elementos
+no adectan a elementos similares dentro de nuestra app, entonces
+
+usamos la etiqueta <style>
+y dentro un de esa le pasamos una propiedad jsx
+y luego un "temple litteral" en donde pondremos nuestro css
+
+
+(Ver 13_style)
+
+
+como vemos afecta solo al título y eso es porque en layout indicamos que a todo lo que esté en main le aplique un bacjground...
+
+si volvemos a index raíz, vamos a ver que tenemos otros atibutos "main" que no han sido afectados...
+pero, y si quisieramos que también esos se pinten de azul?
+simplemente usamos el atributo global:
+(Ver 14_style_global)
+
+-------------------------------------------------------------------
+Renderizar desde Cliente (Mi máquina) Client Side Generation
+es cuando el contenido de una página se renderiza en el navegador usando JS
+es decir si inspeccionamos el documento no vamos a ver contenido cuando se genere el archivo
+Ahora vamos a hacer el consumo de una API y mostarlo en la consola
+vamos a crear un hook de React (Ver 15_hook)
+
+Una vez creado el hook, debemos mostrarlo en nuestra vista, para lo cual guardamos la info de la api en nuestra variable
+y lo mostramos mediante un mapeo. (Ver 16_postsClientes)
+
+--------------------------------------------------------------------
+Renderizar desde el Servidor (Máquina Servidora) 
+(Para eso vamos a usar "tasks")
+En este caso si inspeccionamos el archivo si vamos a ver contendio generado por el servidor
+(Ver 17_postTareas)
+
+Ahora vamos a ver lo qu sería la ruta de detalle de cada post
+para eso debemos pasar como parámetro "context"
+(Ver 18_postTareasID)
+
+-----------------------------------------------------------------
+Renderizar desde (Pre-renderizado) desde que se contruyó la App
+ni el cliente ni el servidor renderiza el contendio
+se renderiza en el build time
+vamos a usar los "users"
+(Ver 19_postUsers)
+
+Y si estas tuvieran detalle (rutas din+amicas) 
+entonces deberíamos usar funciones asincróncias
+(Ver 20_userID)
+
+O también podemos hacerlo más optimizado
+(Ver 21:userIDOP)
+
+---------------------------------------------------------------
+Imágenes
+a partir de la versión 10.0 de Next podemos usar imagenes para que estén optimizadas
+vamos a darles imágenes de perfil a los usuarios!
+entonces creamos una carpeta edentro de "public" que se llame "images" y ahí pegamos 10 fotos de perfil
+(Ver 22_images y 23_userIDiMAGE)
+
+Peor si quisieramos que la imagen sea dinámica es decir que cada usuario tenga su imagen debemos renombrar la imagen y hacer el src de timplo template literal
+(Ver 24_imagenDinamica)
+Cabe señalar que todas las imagenes deben estar en formato jpg
